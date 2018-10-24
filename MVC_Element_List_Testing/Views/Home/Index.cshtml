@@ -1,4 +1,5 @@
-﻿@{
+﻿@model IEnumerable<MVC_Element_List_Testing.Models.Section>
+@{
     ViewBag.Title = "Home Page";
 }
 
@@ -7,7 +8,7 @@
 
 <div class="row">
     <div class="col-sm-3">
-        <img src="https://via.placeholder.com/150x150" type="text/javascript"/>
+        <img src="https://via.placeholder.com/150x150" type="text/javascript" />
     </div>
 
     <div class="col-sm-9">
@@ -74,48 +75,42 @@
     </div>
 </div>
 <div class="row">
+
+    @foreach (var s in Model)
+    {
+        <section id="Section @s.Id">
+            <p>@s.Title</p>
+        </section>
+        foreach (var c in s.Contents)
+        {
+        <section id="Content @c.Id">
+            <p>@c.Title</p>
+        </section>
+        }
+        using (Html.BeginForm("AddContent", "Home"))
+        {
+            <input type="text" id="content-name" placeholder="Content Name" />
+            <button type="submit">Add Content</button>
+        }
+    }
     <h3>Section Creator</h3>
-        <input type="text" id="section-name" placeholder="Section Name" />
-        <button type="submit" value="Add" onclick="AddSection()">Add Section</button>
-    <section id="created-sections">
-        <table>
-            <tbody id="sections"></tbody>
-        </table>
-    </section>
+
+    @* auto generate ID code here *@
+    @using (Html.BeginForm("AddSection", "Home"))
+    {
+        @Html.LabelFor(s => s.First().Id)
+        @Html.TextBoxFor(s => s.First().Id)
+
+        @Html.LabelFor(s => s.First().Title)
+        @Html.TextBoxFor(s => s.First().Title)
+
+        @Html.LabelFor(s => s.First().Approved)
+        @Html.TextBoxFor(s => s.First().Approved)
+
+        @Html.LabelFor(s => s.First().DisplayPosition)
+        @Html.TextBoxFor(s => s.First().DisplayPosition)
+
+        <button type="submit">Add Section</button>
+    }
+
 </div>
-
-<script type="text/javascript">
-    this.el = document.getElementById('sections');
-    this.sections = ['One', 'Two', 'Three'];
-
-    this.AddSection = function () {
-        el = document.getElementById('section-name');
-
-        // get the value of the section-name element
-        var newSection = el.value;
-
-        if (newSection) {
-            // Add the new value
-            this.sections.push(newSection.trim());
-            // Reset input value
-            el.value = '';
-            // Display the new list
-            this.FetchAllSections();
-        }
-    };
-
-    this.FetchAllSections = function () {
-        var data = '';
-        alert(sections[3]);
-        if (this.sections.length > 0) {
-            for (i = 0; i < this.sections.length; i++) {
-                data += '<tr>';
-                data += '<td>' + this.sections[i] + '</td>';
-                data += '<tr>';
-            }
-        }
-        return this.el.innerHTML = data;
-    };
-
-    FetchAllSections();
-</script>
