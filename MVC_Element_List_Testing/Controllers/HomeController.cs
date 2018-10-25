@@ -30,6 +30,26 @@ namespace MVC_Element_List_Testing.Controllers
             return View("Index", sections);
         }
 
+        public ActionResult AddContent(Content content)
+        {
+
+            db.Contents.Add(content);
+            db.SaveChanges();
+
+            sections = db.Sections.ToList();
+            return View("Index", sections);
+        }
+
+        public ActionResult DeleteContent(Content content)
+        {
+            db.Contents.Remove(content);
+            db.SaveChanges();
+
+            sections = db.Sections.ToList();
+            return View("Index", sections);
+        }
+
+
         public ActionResult About()
         {
             ViewBag.Message = "Your application description page.";
