@@ -1,10 +1,11 @@
 ﻿@using MVC_Element_List_Testing.Models;
-@model List<MVC_Element_List_Testing.Models.Section>
+@model MVC_Element_List_Testing.Models.PortfolioCreationViewModel
 @{
     ViewBag.Title = "Home Page";
 }
 
 <head>
+    <link href="@Url.Content("~/Content/Site.css")" rel="stylesheet" type="text/css" />
 </head>
 
 <div class="row">
@@ -77,71 +78,78 @@
 </div>
 <div class="row">
 
-    // Loop through Sections in Model and display
-    @for(int s = 0; s < Model.Count; s++)
+    @*Loop through Sections in Model and display*@
+    @for (int s = 0; s < Model.Sections.Count; s++)
     {
-    <section id="Section @Model.ElementAt(s).Id">
-        <p>@Model.ElementAt(s).Title</p>
+        <section id="section-@Model.Sections.ElementAt(s).Id" class="section">
+            <p>@Model.Sections.ElementAt(s).Title</p>
 
-        @* Loop through Contents in each Section and display *@
-        @for (int c = 0; c < @Model.ElementAt(s).Contents.Count; c++)
-        {
-            <section id="Content @Model.ElementAt(s).Contents.ElementAt(c).Id">
-                @Html.HiddenFor(section => section.ElementAt(s).Contents.ElementAt(c).Id)
-                @Html.HiddenFor(section => section.ElementAt(s).Contents.ElementAt(c).SectionId)
-                @Html.LabelFor(section => section.ElementAt(s).Contents.ElementAt(c).Title)
+            @*Loop through Contents in Sections and display*@
+            @for (int c = 0; c < @Model.Sections.ElementAt(s).Contents.Count; c++)
+            {
+            <section id="content-@Model.Sections.ElementAt(s).Contents.ElementAt(c).Id" class="content">
                 @using (Html.BeginForm("DeleteContent", "Home"))
                 {
+                    <div class="form-group">
+                        @Html.HiddenFor(section => section.Sections.ElementAt(s).Contents.ElementAt(c).Id)
+                        @Html.HiddenFor(section => section.Sections.ElementAt(s).Contents.ElementAt(c).SectionId)
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(section => section.Sections.ElementAt(s).Contents.ElementAt(c).Title)
+                        @Html.TextBoxFor(section => section.Sections.ElementAt(s).Contents.ElementAt(c).Title)
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(section => section.Sections.ElementAt(s).Contents.ElementAt(c).Date)
+                        @Html.TextBoxFor(section => section.Sections.ElementAt(s).Contents.ElementAt(c).Date)
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(section => section.Sections.ElementAt(s).Contents.ElementAt(c).Type)
+                        @Html.TextBoxFor(section => section.Sections.ElementAt(s).Contents.ElementAt(c).Type)
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(section => section.Sections.ElementAt(s).Contents.ElementAt(c).Source)
+                        @Html.TextBoxFor(section => section.Sections.ElementAt(s).Contents.ElementAt(c).Source)
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(section => section.Sections.ElementAt(s).Contents.ElementAt(c).DisplayPosition)
+                        @Html.TextBoxFor(section => section.Sections.ElementAt(s).Contents.ElementAt(c).DisplayPosition)
+                    </div>
                     <button type="submit">Delete Content</button>
                 }
             </section>
-        }
-    </section>
-            
-        using (Html.BeginForm("AddContent", "Home"))
-        {
-            @Html.LabelFor(section => section.First().Contents.First().Id)
-            @Html.TextBoxFor(section => section.First().Contents.First().Id)
+            }
 
-            @Html.LabelFor(section => section.First().Contents.First().SectionId)
-            @Html.TextBoxFor(section => section.First().Contents.First().SectionId)
+            @* Form for adding content to a section *@
+            @using (Html.BeginForm("AddContent", "Home"))
+            {
+                @Html.HiddenFor(section => section.content.Id)
 
-            @Html.LabelFor(section => section.First().Contents.First().Title)
-            @Html.TextBoxFor(section => section.First().Contents.First().Title)
+                @Html.Hidden(Model.Sections.ElementAt(s).Id.ToString())
 
-            @*
-                @Html.LabelFor(section => section.First().Contents.First().Date)
-                @Html.TextBoxFor(section => section.First().Contents.First().Date)
+                @Html.LabelFor(section => section.content.Title)
+                @Html.TextBoxFor(section => section.content.Title)
 
-                @Html.LabelFor(section => section.First().Contents.First().Type)
-                @Html.TextBoxFor(section => section.First().Contents.First().Type)
+                <button type="submit">Add Content</button>
+            }
+        </section>
 
-                @Html.LabelFor(section => section.First().Contents.First().Source)
-                @Html.TextBoxFor(section => section.First().Contents.First().Source)
-
-                @Html.LabelFor(section => section.First().Contents.First().DisplayPosition)
-                @Html.TextBoxFor(section => section.First().Contents.First().DisplayPosition)
-            *@
-            <button type="submit">Add Content</button>
-
-        }
     }
     <h3>Section Creator</h3>
 
     @* auto generate ID code here *@
     @using (Html.BeginForm("AddSection", "Home"))
     {
-        @Html.LabelFor(s => s.First().Id)
-        @Html.TextBoxFor(s => s.First().Id)
 
-        @Html.LabelFor(s => s.First().Title)
-        @Html.TextBoxFor(s => s.First().Title)
+        @Html.HiddenFor(s => s.section.Id)
 
-        @Html.LabelFor(s => s.First().Approved)
-        @Html.TextBoxFor(s => s.First().Approved)
+        @Html.LabelFor(s => s.section.Title)
+        @Html.TextBoxFor(s => s.section.Title)
 
-        @Html.LabelFor(s => s.First().DisplayPosition)
-        @Html.TextBoxFor(s => s.First().DisplayPosition)
+        @Html.LabelFor(s => s.section.Approved)
+        @Html.TextBoxFor(s => s.section.Approved)
+
+        @Html.LabelFor(s => s.section.DisplayPosition)
+        @Html.TextBoxFor(s => s.section.DisplayPosition)
 
         <button type="submit">Add Section</button>
     }

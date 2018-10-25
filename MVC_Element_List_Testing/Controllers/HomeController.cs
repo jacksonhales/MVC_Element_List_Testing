@@ -11,42 +11,77 @@ namespace MVC_Element_List_Testing.Controllers
     public class HomeController : Controller
     {
         private Database1Entities db = new Database1Entities();
-        //List<Section> sections = db.Sections.;
-        IEnumerable<Section> sections;
+        PortfolioCreationViewModel viewModel = new PortfolioCreationViewModel();
+        
 
         public ActionResult Index()
         {
-            sections = db.Sections.ToList();
-            return View("Index", sections);
+            viewModel.Sections = db.Sections.ToList();
+            return View("Index", viewModel);
         }
 
         public ActionResult AddSection(Section section)
         {
-            
+            // get current sections
+            viewModel.Sections = db.Sections.ToList();
+
+            // find next Id for section (largest)
+            int nextId = 0;
+            foreach (Section s in viewModel.Sections)
+            {
+                if (s.Id > nextId)
+                {
+                    nextId = s.Id;
+                }
+
+            }
+
+            section.Id = nextId + 1;
+
             db.Sections.Add(section);
             db.SaveChanges();
 
-            sections = db.Sections.ToList();
-            return View("Index", sections);
+            viewModel.Sections = db.Sections.ToList();
+
+            return View("Index", viewModel);
         }
 
         public ActionResult AddContent(Content content)
         {
+            // get current sections
+            viewModel.Sections = db.Sections.ToList();
+
+            Section currentSection = db.Sections.SingleOrDefault(s => s.Id == content.SectionId);
+            content.SectionId = currentSection.Id;
+
+            // find next Id for section (largest)
+            int nextId = 0;
+            foreach (Content c in currentSection.Contents)
+            {
+                if (c.Id > nextId)
+                {
+                    nextId = c.Id;
+                }
+
+            }
+
+            content.Id = nextId + 1;
 
             db.Contents.Add(content);
             db.SaveChanges();
 
-            sections = db.Sections.ToList();
-            return View("Index", sections);
+            viewModel.Sections = db.Sections.ToList();
+            return View("Index", viewModel);
         }
 
         public ActionResult DeleteContent(Content content)
         {
+            
             db.Contents.Remove(content);
             db.SaveChanges();
 
-            sections = db.Sections.ToList();
-            return View("Index", sections);
+            viewModel.Sections = db.Sections.ToList();
+            return View("Index", viewModel);
         }
 
 
