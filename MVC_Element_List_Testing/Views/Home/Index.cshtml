@@ -1,11 +1,16 @@
 ﻿@using MVC_Element_List_Testing.Models;
 @model MVC_Element_List_Testing.Models.PortfolioCreationViewModel
+@section Scripts
+{
+    <script src="@Url.Content("~/Scripts/content-form.js")"></script>
+}
 @{
     ViewBag.Title = "Home Page";
 }
 
 <head>
     <link href="@Url.Content("~/Content/Site.css")" rel="stylesheet" type="text/css" />
+    <script src="@Url.Content("~/Scripts/content-form.js")"></script>
 </head>
 
 <div class="row">
@@ -81,42 +86,46 @@
     @*Loop through Sections in Model and display*@
     @for (int s = 0; s < Model.Sections.Count; s++)
     {
-        <section id="section-@Model.Sections.ElementAt(s).Id" class="section">
+        <section id="section" class="section">
             <p>@Model.Sections.ElementAt(s).Title</p>
 
             @*Loop through Contents in Sections and display*@
             @for (int c = 0; c < @Model.Sections.ElementAt(s).Contents.Count; c++)
             {
-            <section id="content-@Model.Sections.ElementAt(s).Contents.ElementAt(c).Id" class="content">
-                @using (Html.BeginForm("DeleteContent", "Home"))
-                {
-                    <div class="form-group">
-                        @Html.HiddenFor(section => section.Sections.ElementAt(s).Contents.ElementAt(c).Id)
-                        @Html.HiddenFor(section => section.Sections.ElementAt(s).Contents.ElementAt(c).SectionId)
-                    </div>
-                    <div class="form-group">
-                        @Html.LabelFor(section => section.Sections.ElementAt(s).Contents.ElementAt(c).Title)
-                        @Html.TextBoxFor(section => section.Sections.ElementAt(s).Contents.ElementAt(c).Title)
-                    </div>
-                    <div class="form-group">
-                        @Html.LabelFor(section => section.Sections.ElementAt(s).Contents.ElementAt(c).Date)
-                        @Html.TextBoxFor(section => section.Sections.ElementAt(s).Contents.ElementAt(c).Date)
-                    </div>
-                    <div class="form-group">
-                        @Html.LabelFor(section => section.Sections.ElementAt(s).Contents.ElementAt(c).Type)
-                        @Html.TextBoxFor(section => section.Sections.ElementAt(s).Contents.ElementAt(c).Type)
-                    </div>
-                    <div class="form-group">
-                        @Html.LabelFor(section => section.Sections.ElementAt(s).Contents.ElementAt(c).Source)
-                        @Html.TextBoxFor(section => section.Sections.ElementAt(s).Contents.ElementAt(c).Source)
-                    </div>
-                    <div class="form-group">
-                        @Html.LabelFor(section => section.Sections.ElementAt(s).Contents.ElementAt(c).DisplayPosition)
-                        @Html.TextBoxFor(section => section.Sections.ElementAt(s).Contents.ElementAt(c).DisplayPosition)
-                    </div>
-                    <button type="submit">Delete Content</button>
-                }
-            </section>
+                int a = 0;
+                <section id="content-@Model.Sections.ElementAt(s).Contents.ElementAt(c).Id" class="content">
+                    @using (Html.BeginForm("DeleteContent", "Home"))   
+                    {
+
+                        <div class="form-group">
+                            @Html.HiddenFor(section => section.Sections.ElementAt(s).Contents.ElementAt(c).Id)
+                            @Html.HiddenFor(section => section.Sections.ElementAt(s).Contents.ElementAt(c).SectionId)
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(section => section.Sections.ElementAt(s).Contents.ElementAt(c).Title)
+                            @Html.TextBoxFor(section => section.Sections.ElementAt(s).Contents.ElementAt(c).Title)
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(section => section.Sections.ElementAt(s).Contents.ElementAt(c).Date)
+                            @Html.TextBoxFor(section => section.Sections.ElementAt(s).Contents.ElementAt(c).Date)
+                        </div>
+                        <div class="form-group" id="type">
+                            @Html.LabelFor(section => section.Sections.ElementAt(s).Contents.ElementAt(c).Type)
+                            @Html.TextBoxFor(section => section.Sections.ElementAt(s).Contents.ElementAt(c).Type)
+                        </div>
+                        <div class="hidden" id="type2-@a"><input /></div>
+                        <div class="form-group">
+                            @Html.LabelFor(section => section.Sections.ElementAt(s).Contents.ElementAt(c).Source)
+                            @Html.TextBoxFor(section => section.Sections.ElementAt(s).Contents.ElementAt(c).Source)
+                        </div>
+                        <div class="form-group">
+                            @Html.LabelFor(section => section.Sections.ElementAt(s).Contents.ElementAt(c).DisplayPosition)
+                            @Html.TextBoxFor(section => section.Sections.ElementAt(s).Contents.ElementAt(c).DisplayPosition)
+                        </div>
+                        <button type="submit">Delete Content</button>
+                    }
+                </section>
+                a++;
             }
 
             @* Form for adding content to a section *@
@@ -124,10 +133,12 @@
             {
                 @Html.HiddenFor(section => section.content.Id)
 
-                @Html.Hidden(Model.Sections.ElementAt(s).Id.ToString())
+                @Html.HiddenFor(section => section.content.SectionId, new { Value = Model.Sections.ElementAt(s).Id })
 
-                @Html.LabelFor(section => section.content.Title)
-                @Html.TextBoxFor(section => section.content.Title)
+                <div class="form-group">
+                    @Html.LabelFor(section => section.content.Title)
+                    @Html.TextBoxFor(section => section.content.Title, new { Value = "" })
+                </div>
 
                 <button type="submit">Add Content</button>
             }

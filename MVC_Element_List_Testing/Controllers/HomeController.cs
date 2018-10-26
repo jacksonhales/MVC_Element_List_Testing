@@ -41,9 +41,8 @@ namespace MVC_Element_List_Testing.Controllers
             db.Sections.Add(section);
             db.SaveChanges();
 
-            viewModel.Sections = db.Sections.ToList();
 
-            return View("Index", viewModel);
+            return RedirectToAction("Index", viewModel);
         }
 
         public ActionResult AddContent(Content content)
@@ -70,18 +69,17 @@ namespace MVC_Element_List_Testing.Controllers
             db.Contents.Add(content);
             db.SaveChanges();
 
-            viewModel.Sections = db.Sections.ToList();
-            return View("Index", viewModel);
+            return RedirectToAction("Index", viewModel);
         }
 
         public ActionResult DeleteContent(Content content)
         {
-            
-            db.Contents.Remove(content);
+
+            Content contentToDelete = db.Contents.SingleOrDefault(c => c.Id == content.Id && c.SectionId == content.SectionId);
+            db.Contents.Remove(contentToDelete);
             db.SaveChanges();
 
-            viewModel.Sections = db.Sections.ToList();
-            return View("Index", viewModel);
+            return RedirectToAction("Index", viewModel);
         }
 
 
